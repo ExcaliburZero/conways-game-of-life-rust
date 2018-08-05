@@ -10,7 +10,7 @@ use patterns;
 /// Represents a 2D Conway's Game of Life board.
 ///
 /// ```
-/// let mut board = gol::Board::new((10, 9));
+/// let mut board = gol::Board::new(10, 9);
 ///
 /// board.place_pattern(gol::Glider {}, 0, 1);
 /// board.place_pattern(gol::Glider {}, 5, 3);
@@ -29,9 +29,11 @@ impl Board {
     /// Creates a new Board with the given number of rows and columns.
     ///
     /// ```
-    /// let board = gol::Board::new((5, 7));
+    /// let board = gol::Board::new(5, 7);
     /// ```
-    pub fn new(dims: (usize, usize)) -> Board {
+    pub fn new(rows: usize, columns: usize) -> Board {
+        let dims = (rows, columns);
+
         Board {
             a: ndarray::Array2::<bool>::default(dims),
             b: ndarray::Array2::<bool>::default(dims),
@@ -42,7 +44,7 @@ impl Board {
     /// Updates the cells of the board to the next generation.
     ///
     /// ```
-    /// let mut board = gol::Board::new((5, 5));
+    /// let mut board = gol::Board::new(5, 5);
     /// board.place_pattern(gol::Glider {}, 0, 1);
     ///
     /// let expected = String::from(
@@ -94,7 +96,7 @@ impl Board {
     /// the specified (row, column) position.
     ///
     /// ```
-    /// let mut board = gol::Board::new((5, 5));
+    /// let mut board = gol::Board::new(5, 5);
     ///
     /// board.place_pattern(gol::Glider {}, 0, 1);
     /// ```
@@ -119,7 +121,7 @@ impl fmt::Display for Board {
     /// `x`'s represent alive cells, and `o`'s represent dead cells.
     ///
     /// ```
-    /// let mut board = gol::Board::new((5, 5));
+    /// let mut board = gol::Board::new(5, 5);
     /// board.place_pattern(gol::Glider {}, 0, 1);
     ///
     /// let expected = String::from(

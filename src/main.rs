@@ -1,11 +1,10 @@
 extern crate gol;
 
 fn main() {
-    let height = 9;
-    let width = height;
+    let rows = 9;
+    let columns = rows;
 
-    let dims = (height, width);
-    let mut board = gol::Board::new(dims);
+    let mut board = gol::Board::new(rows, columns);
 
     board.place_pattern(gol::Glider {}, 1, 2);
 
