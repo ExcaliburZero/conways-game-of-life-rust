@@ -7,6 +7,18 @@ use self::ndarray::Dimension;
 
 use patterns;
 
+/// Represents a 2D Conway's Game of Life board.
+///
+/// ```
+/// let mut board = gol::Board::new((10, 9));
+///
+/// board.place_pattern(gol::Glider {}, 0, 1);
+/// board.place_pattern(gol::Glider {}, 5, 3);
+///
+/// for _gen in 0..100 {
+///     board.next_generation();
+/// }
+/// ```
 pub struct Board {
     a: ndarray::Array2<bool>,
     b: ndarray::Array2<bool>,
@@ -14,6 +26,11 @@ pub struct Board {
 }
 
 impl Board {
+    /// Creates a new Board with the given number of rows and columns.
+    ///
+    /// ```
+    /// let board = gol::Board::new((5, 7));
+    /// ```
     pub fn new(dims: (usize, usize)) -> Board {
         Board {
             a: ndarray::Array2::<bool>::default(dims),
@@ -22,6 +39,35 @@ impl Board {
         }
     }
 
+    /// Updates the cells of the board to the next generation.
+    ///
+    /// ```
+    /// let mut board = gol::Board::new((5, 5));
+    /// board.place_pattern(gol::Glider {}, 0, 1);
+    ///
+    /// let expected = String::from(
+    /// "ooxoo
+    /// oooxo
+    /// oxxxo
+    /// ooooo
+    /// ooooo
+    /// "
+    /// );
+    ///
+    /// assert_eq!(format!("{}", board), expected);
+    ///
+    /// board.next_generation();
+    ///
+    /// let expected2 = String::from(
+    /// "ooooo
+    /// oxoxo
+    /// ooxxo
+    /// ooxoo
+    /// ooooo
+    /// ");
+    ///
+    /// assert_eq!(format!("{}", board), expected2);
+    /// ```
     pub fn next_generation(&mut self) {
         let (read, write) = if self.generation % 2 == 0 {
             (&self.a, &mut self.b)
@@ -44,6 +90,14 @@ impl Board {
         self.generation += 1;
     }
 
+    /// Places an instance of the given Game of Life pattern onto the board at
+    /// the specified (row, column) position.
+    ///
+    /// ```
+    /// let mut board = gol::Board::new((5, 5));
+    ///
+    /// board.place_pattern(gol::Glider {}, 0, 1);
+    /// ```
     pub fn place_pattern<T: patterns::GOLPattern + fmt::Debug>(&mut self, pattern: T, i: usize, j: usize) {
         let read = if self.generation % 2 == 0 {
             &mut self.a
@@ -61,6 +115,23 @@ impl Board {
 }
 
 impl fmt::Display for Board {
+    /// Displays the board using a simple ASCII text representation, where
+    /// `x`'s represent alive cells, and `o`'s represent dead cells.
+    ///
+    /// ```
+    /// let mut board = gol::Board::new((5, 5));
+    /// board.place_pattern(gol::Glider {}, 0, 1);
+    ///
+    /// let expected = String::from(
+    /// "ooxoo
+    /// oooxo
+    /// oxxxo
+    /// ooooo
+    /// ooooo
+    /// ");
+    ///
+    /// assert_eq!(format!("{}", board), expected);
+    /// ```
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let read = if self.generation % 2 == 0 {
             &self.a
