@@ -36,6 +36,33 @@ pub trait GOLPattern {
     fn get_dims(&self) -> (usize, usize);
 }
 
+/// A Blinker pattern.
+///
+/// A line of three alive cells that blink by oscilating between a vertical
+/// line and a horizontal line.
+///
+/// A region of 3x3 cells is resverved for placing the pattern, however it
+/// currently only places a blinker in the vertical orientation in the middle
+/// of the reserved area.
+///
+/// [Blinker page on LifeWiki](http://www.conwaylife.com/w/index.php?title=Blinker)
+///
+/// ```
+/// let mut board = gol::Board::new(5, 5);
+///
+/// board.place_pattern(gol::Blinker {}, 0, 0);
+///
+/// let expected = String::from(
+/// "oxooo
+/// oxooo
+/// oxooo
+/// ooooo
+/// ooooo
+/// "
+/// );
+///
+/// assert_eq!(format!("{}", board), expected);
+/// ```
 #[derive(Debug)]
 pub struct Blinker {}
 
@@ -51,6 +78,30 @@ impl GOLPattern for Blinker {
     }
 }
 
+/// A Glider pattern.
+///
+/// An arrangement of cells in a 3x3 region that slowly moves across the board.
+///
+/// When placed on the board, only the classic phase and orientation is used.
+///
+/// [Glider page on LifeWiki](http://www.conwaylife.com/wiki/Glider)
+///
+/// ```
+/// let mut board = gol::Board::new(5, 5);
+///
+/// board.place_pattern(gol::Glider {}, 0, 0);
+///
+/// let expected = String::from(
+/// "oxooo
+/// ooxoo
+/// xxxoo
+/// ooooo
+/// ooooo
+/// "
+/// );
+///
+/// assert_eq!(format!("{}", board), expected);
+/// ```
 #[derive(Debug)]
 pub struct Glider {}
 
