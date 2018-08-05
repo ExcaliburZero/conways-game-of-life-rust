@@ -1,5 +1,5 @@
 [package]
-name = "conways-game-of-life"
+name = "gol"
 version = "0.1.0"
 authors = ["Christopher Wells <cwellsny@nycap.rr.com>"]
 

@@ -1,4 +1,5 @@
 extern crate ndarray;
+extern crate gol;
 
 use std::cmp;
 use std::fmt;
@@ -12,7 +13,7 @@ fn main() {
     let dims = (height, width);
     let mut board = Board::new(dims);
 
-    board.place_pattern(Glider {}, 1, 2);
+    board.place_pattern(gol::Glider {}, 1, 2);
 
     let generations = 5;
 
@@ -61,7 +62,7 @@ impl Board {
         self.generation += 1;
     }
 
-    fn place_pattern<T: GOLPattern + fmt::Debug>(&mut self, pattern: T, i: usize, j: usize) {
+    fn place_pattern<T: gol::GOLPattern + fmt::Debug>(&mut self, pattern: T, i: usize, j: usize) {
         let read = if self.generation % 2 == 0 {
             &mut self.a
         } else {
@@ -143,7 +144,7 @@ fn next_state(prev_state: bool, neighbors: i32) -> bool {
     }
 }
 
-fn check_fits<T: GOLPattern>(read: &ndarray::Array2<bool>, pattern: &T, i: usize, j: usize) -> bool {
+fn check_fits<T: gol::GOLPattern>(read: &ndarray::Array2<bool>, pattern: &T, i: usize, j: usize) -> bool {
     let (rows, columns) = get_dims(&read);
     let (height, width) = pattern.get_dims();
 
@@ -151,41 +152,4 @@ fn check_fits<T: GOLPattern>(read: &ndarray::Array2<bool>, pattern: &T, i: usize
     let end_column = j + width - 1;
 
     end_row < rows && end_column < columns
-}
-
-trait GOLPattern {
-    fn place(&self, read: &mut ndarray::Array2<bool>, i: usize, j: usize);
-    fn get_dims(&self) -> (usize, usize);
-}
-
-#[derive(Debug)]
-struct Blinker {}
-
-impl GOLPattern for Blinker {
-    fn place(&self, read: &mut ndarray::Array2<bool>, i: usize, j: usize) {
-        read[[i, j + 1]] = true;
-        read[[i + 1, j + 1]] = true;
-        read[[i + 2, j + 1]] = true;
-    }
-
-    fn get_dims(&self) -> (usize, usize) {
-        return (3, 3)
-    }
-}
-
-#[derive(Debug)]
-struct Glider {}
-
-impl GOLPattern for Glider {
-    fn place(&self, read: &mut ndarray::Array2<bool>, i: usize, j: usize) {
-        read[[i, j + 1]] = true;
-        read[[i + 1, j + 2]] = true;
-        read[[i + 2, j]] = true;
-        read[[i + 2, j + 1]] = true;
-        read[[i + 2, j + 2]] = true;
-    }
-
-    fn get_dims(&self) -> (usize, usize) {
-        return (3, 3)
-    }
 }
