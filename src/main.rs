@@ -1,14 +1,15 @@
 extern crate gol;
 
 fn main() {
-    let rows = 100;
+    let rows = 20;
     let columns = rows;
 
     let mut board = gol::Board::new(rows, columns);
 
     board.place_pattern(gol::Glider {}, 1, 2);
 
-    let generations = 300;
+    let image_scaling = 4;
+    let generations = 50;
 
     for gen in 0..generations {
         board.next_generation();
@@ -16,7 +17,7 @@ fn main() {
         let filepath = get_image_path(gen);
 
         println!("{}", filepath);
-        board.to_image(&filepath).unwrap();
+        board.to_image(&filepath, image_scaling).unwrap();
     }
 }
 

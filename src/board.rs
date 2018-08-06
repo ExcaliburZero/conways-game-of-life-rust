@@ -118,7 +118,7 @@ impl Board {
         pattern.place(read, i, j);
     }
 
-    pub fn to_image(&self, filepath: &str) -> Result<(), Error> {
+    pub fn to_image(&self, filepath: &str, scaling: usize) -> Result<(), Error> {
         let read = if self.generation % 2 == 0 {
             &self.a
         } else {
@@ -126,12 +126,15 @@ impl Board {
         };
 
         let (rows, columns) = get_dims(&read);
-        let mut image = ImageBuffer::<Rgb<u8>, _>::new(columns as u32, rows as u32);
+        let width = (rows * scaling) as u32;
+        let height = (columns * scaling) as u32;
+        let mut image = ImageBuffer::<Rgb<u8>, _>::new(width, height);
 
         for i in 0..rows {
             for j in 0..columns {
                 let color = if read[[i, j]] { 0 } else { 255 };
-                image.get_pixel_mut(i as u32, j as u32).data = [color, color, color];
+
+                write_pixel(&mut image, i, j, color, scaling);
             }
         }
 
@@ -230,4 +233,15 @@ fn check_fits<T: patterns::GOLPattern>(read: &ndarray::Array2<bool>, pattern: &T
     let end_column = j + width - 1;
 
     end_row < rows && end_column < columns
+}
+
+fn write_pixel(image: &mut ImageBuffer<Rgb<u8>, Vec<u8>>, i: usize, j: usize, color: u8, scaling: usize) {
+    for r in 0..scaling {
+        for c in 0..scaling {
+            let x = i * scaling + r;
+            let y = j * scaling + c;
+
+            image.get_pixel_mut(x as u32, y as u32).data = [color, color, color];
+        }
+    }
 }
