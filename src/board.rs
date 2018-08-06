@@ -1,8 +1,11 @@
+extern crate image;
 extern crate ndarray;
 
 use std::cmp;
 use std::fmt;
+use std::io::Error;
 
+use self::image::{ImageBuffer, Rgb};
 use self::ndarray::Dimension;
 
 use patterns;
@@ -113,6 +116,26 @@ impl Board {
 
 
         pattern.place(read, i, j);
+    }
+
+    pub fn to_image(&self, filepath: &str) -> Result<(), Error> {
+        let read = if self.generation % 2 == 0 {
+            &self.a
+        } else {
+            &self.b
+        };
+
+        let (rows, columns) = get_dims(&read);
+        let mut image = ImageBuffer::<Rgb<u8>, _>::new(columns as u32, rows as u32);
+
+        for i in 0..rows {
+            for j in 0..columns {
+                let color = if read[[i, j]] { 0 } else { 255 };
+                image.get_pixel_mut(i as u32, j as u32).data = [color, color, color];
+            }
+        }
+
+        image.save(filepath)
     }
 }
 
