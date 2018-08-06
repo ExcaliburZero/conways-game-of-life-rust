@@ -117,6 +117,22 @@ impl Board {
         pattern.place(read, i, j);
     }
 
+    /// Creates an image of the board. Alive cells are shown in black, and dead
+    /// cells are shown in white.
+    ///
+    /// The cell to pixel scaling can be increased in order to make it easier
+    /// to see smaller boards.
+    ///
+    /// Note that if you want to save the board image to a file, you will need
+    /// to call the `save` method with the desired filepath on the ImageBuffer
+    /// that is retured by this method.
+    ///
+    /// ```
+    /// let board = gol::Board::new(5, 5);
+    ///
+    /// let image = board.to_image(1);
+    /// // image.save("my_board.png").unwrap();
+    /// ```
     pub fn to_image(&self, scaling: usize) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
         let read = if self.generation % 2 == 0 {
             &self.a
