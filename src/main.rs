@@ -7,6 +7,7 @@ fn main() {
     let mut board = gol::Board::new(rows, columns);
 
     board.place_pattern(gol::Glider {}, 1, 2);
+    board.place_pattern(gol::Blinker {}, 10, 10);
 
     let image_scaling = 4;
     let generations = 50;
@@ -17,7 +18,8 @@ fn main() {
         let filepath = get_image_path(gen);
 
         println!("{}", filepath);
-        board.to_image(&filepath, image_scaling).unwrap();
+        board.to_image(image_scaling)
+            .save(&filepath).unwrap();
     }
 }
 

@@ -3,7 +3,6 @@ extern crate ndarray;
 
 use std::cmp;
 use std::fmt;
-use std::io::Error;
 
 use self::image::{ImageBuffer, Rgb};
 use self::ndarray::Dimension;
@@ -118,7 +117,7 @@ impl Board {
         pattern.place(read, i, j);
     }
 
-    pub fn to_image(&self, filepath: &str, scaling: usize) -> Result<(), Error> {
+    pub fn to_image(&self, scaling: usize) -> ImageBuffer<Rgb<u8>, Vec<u8>> {
         let read = if self.generation % 2 == 0 {
             &self.a
         } else {
@@ -138,7 +137,7 @@ impl Board {
             }
         }
 
-        image.save(filepath)
+        image
     }
 }
 
