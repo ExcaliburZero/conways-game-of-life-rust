@@ -1,4 +1,5 @@
 extern crate ndarray;
+extern crate rand;
 
 /// A pattern for Conway's Game of Life that can be written to a game board.
 ///
@@ -32,7 +33,7 @@ pub trait GOLPattern {
     fn place(&self, read: &mut ndarray::Array2<bool>, i: usize, j: usize);
 
     /// Returns the dimensions of the region that the pattern will be written
-    /// to.
+    /// to. (rows, columns)
     fn get_dims(&self) -> (usize, usize);
 }
 
@@ -116,5 +117,39 @@ impl GOLPattern for Glider {
 
     fn get_dims(&self) -> (usize, usize) {
         return (3, 3)
+    }
+}
+
+/// A random pattern.
+///
+/// A field of cells that are filled with a random pattern.
+///
+/// ```
+/// let mut board = gol::Board::new(5, 5);
+///
+/// board.place_pattern(gol::RandomField {
+///     rows: 5, columns: 5
+/// }, 0, 0);
+/// ```
+#[derive(Debug)]
+pub struct RandomField {
+    pub rows: usize,
+    pub columns: usize
+}
+
+impl GOLPattern for RandomField {
+    fn place(&self, read: &mut ndarray::Array2<bool>, i: usize, j: usize) {
+        for i2 in 0..self.rows {
+            for j2 in 0..self.columns {
+                let r = i + i2;
+                let c = j + j2;
+
+                read[[r, c]] = rand::random::<bool>();
+            }
+        }
+    }
+
+    fn get_dims(&self) -> (usize, usize) {
+        return (self.rows, self.columns)
     }
 }

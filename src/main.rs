@@ -1,16 +1,15 @@
 extern crate gol;
 
 fn main() {
-    let rows = 20;
+    let rows = 60;
     let columns = rows;
 
     let mut board = gol::Board::new(rows, columns);
 
-    board.place_pattern(gol::Glider {}, 1, 2);
-    board.place_pattern(gol::Blinker {}, 10, 10);
+    board.place_pattern(gol::RandomField { rows, columns }, 0, 0);
 
     let image_scaling = 4;
-    let generations = 50;
+    let generations = 600;
 
     for gen in 0..generations {
         board.next_generation();
